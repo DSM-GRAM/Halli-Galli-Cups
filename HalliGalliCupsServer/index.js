@@ -20,7 +20,6 @@ io.on('connection', function (socket) {
         if(winner == null) {
             winner = socket.id;
             socket.emit('win');
-            socket.broadcast.to(room);
             socket.broadcast.to(room).emit('lose');
         }
     });
