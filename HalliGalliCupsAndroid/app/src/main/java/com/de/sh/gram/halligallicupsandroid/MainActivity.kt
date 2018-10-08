@@ -8,19 +8,63 @@ import android.view.MotionEvent.ACTION_DOWN
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.ClipDescription
-import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.DragEvent
 import android.view.View.*
-import android.widget.ImageView
-import com.de.sh.gram.halligallicupsandroid.R.drawable.red_cup
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
+    var score: Int = 0
+    var stage: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        var randomNum = Random().nextInt(18)
+
+        var cards: ArrayList<Card> = ArrayList<Card>()
+        val card1: Card = Card(arrayOf("red", "blue", "green", "black"))
+        val card2: Card = Card(arrayOf("red", "green", "black", "blue"))
+        val card3: Card = Card(arrayOf("red", "black", "blue", "green"))
+        val card4: Card = Card(arrayOf("red", "blue", "black", "green"))
+        val card5: Card = Card(arrayOf("blue", "black", "green", "red"))
+        val card6: Card = Card(arrayOf("blue", "green", "red", "black"))
+        val card7: Card = Card(arrayOf("blue", "red", "black", "green"))
+        val card8: Card = Card(arrayOf("blue", "black", "red", "green"))
+        val card9: Card = Card(arrayOf("black", "red", "blue", "green"))
+        val card10: Card = Card(arrayOf("black", "green", "red", "blue"))
+        val card11: Card = Card(arrayOf("black", "blue", "red", "green"))
+        val card12: Card = Card(arrayOf("black", "red", "green", "blue"))
+        val card13: Card = Card(arrayOf("black", "blue", "green", "red"))
+        val card14: Card = Card(arrayOf("green", "blue", "black", "red"))
+        val card15: Card = Card(arrayOf("green", "black", "blue", "red"))
+        val card16: Card = Card(arrayOf("green", "red", "blue", "black"))
+        val card17: Card = Card(arrayOf("green", "red", "black", "blue"))
+
+        cards.add(card1)
+        cards.add(card2)
+        cards.add(card3)
+        cards.add(card4)
+        cards.add(card5)
+        cards.add(card6)
+        cards.add(card7)
+        cards.add(card8)
+        cards.add(card9)
+        cards.add(card10)
+        cards.add(card11)
+        cards.add(card12)
+        cards.add(card13)
+        cards.add(card14)
+        cards.add(card15)
+        cards.add(card16)
+        cards.add(card17)
+
+        cards.add(Card(arrayOf("")))
+
 
         img_main_red_cup.tag = "IMAGEVIEW_TAG"
         img_main_green_cup.tag = "IMAGEVIEW_TAG"
@@ -34,13 +78,52 @@ class MainActivity : AppCompatActivity() {
 
         layout.setOnDragListener(DragListener())
         img_main_first_cup.setOnDragListener(DragListener())
-        img_main_first_cup.setOnClickListener { imageCheck(img_main_first_cup) }
+        img_main_first_cup.setOnClickListener { imageComebackCheck(img_main_first_cup) }
         img_main_second_cup.setOnDragListener(DragListener())
-        img_main_second_cup.setOnClickListener { imageCheck(img_main_second_cup) }
+        img_main_second_cup.setOnClickListener { imageComebackCheck(img_main_second_cup) }
         img_main_third_cup.setOnDragListener(DragListener())
-        img_main_third_cup.setOnClickListener { imageCheck(img_main_third_cup) }
+        img_main_third_cup.setOnClickListener { imageComebackCheck(img_main_third_cup) }
         img_main_fourth_cup.setOnDragListener(DragListener())
-        img_main_fourth_cup.setOnClickListener { imageCheck(img_main_fourth_cup) }
+        img_main_fourth_cup.setOnClickListener { imageComebackCheck(img_main_fourth_cup) }
+
+        setScore()
+        setStage()
+
+        btn_main_bell.setOnClickListener {
+            var yourArray: Array<String> = arrayOf("","","","")
+            when (img_main_first_cup.tag) {
+                R.drawable.red_cup -> yourArray[0] = "red"
+                R.drawable.green_cup -> yourArray[0] = "green"
+                R.drawable.blue_cup -> yourArray[0] = "blue"
+                R.drawable.black_cup -> yourArray[0] = "black"
+            }
+            when (img_main_second_cup.tag) {
+                R.drawable.red_cup -> yourArray[1] = "red"
+                R.drawable.green_cup -> yourArray[1] = "green"
+                R.drawable.blue_cup -> yourArray[1] = "blue"
+                R.drawable.black_cup -> yourArray[1] = "black"
+            }
+            when (img_main_third_cup.tag) {
+                R.drawable.red_cup -> yourArray[2] = "red"
+                R.drawable.green_cup -> yourArray[2] = "green"
+                R.drawable.blue_cup -> yourArray[2] = "blue"
+                R.drawable.black_cup -> yourArray[2] = "black"
+            }
+            when (img_main_fourth_cup.tag) {
+                R.drawable.red_cup -> yourArray[3] = "red"
+                R.drawable.green_cup -> yourArray[3] = "green"
+                R.drawable.blue_cup -> yourArray[3] = "blue"
+                R.drawable.black_cup -> yourArray[3] = "black"
+            }
+
+            Log.d("Debug",cards[randomNum].cardArray[0]+cards[randomNum].cardArray[1]+cards[randomNum].cardArray[2]+cards[randomNum].cardArray[3])
+            if(cards[randomNum].match(yourArray)) {
+                Toast.makeText(this,"성공",LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this,"실패", LENGTH_SHORT).show()
+            }
+        }
+
 
     }
 
@@ -103,11 +186,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun imageCheck(v: View) {
+    fun imageComebackCheck(v: View) {
         when (v.tag) {
             R.drawable.red_cup -> {
                 img_main_red_cup.visibility = VISIBLE
-                v.background = resources.getDrawable(R.drawable.empty_image_background)
                 v.setBackgroundResource(R.drawable.empty_image_background)
             }
             R.drawable.green_cup -> {
@@ -122,6 +204,26 @@ class MainActivity : AppCompatActivity() {
                 img_main_black_cup.visibility = VISIBLE
                 v.setBackgroundResource(R.drawable.empty_image_background)
             }
+        }
+    }
+
+    fun setScore() {
+        text_main_score.text = score.toString()
+    }
+
+    fun setStage() {
+        text_main_stage.text = stage.toString()
+    }
+
+    class Card(var cardArray: Array<String>) {
+
+        fun match(yourArray: Array<String>): Boolean {
+            for (i in 0..4) {
+                if (!(cardArray[0].equals(yourArray[0]))) {
+                    return false
+                }
+            }
+            return true
         }
     }
 }

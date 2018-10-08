@@ -17,7 +17,7 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <ImageButton
-        android:id="@+id/img_main_bell"
+        android:id="@+id/btn_main_bell"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:background="@drawable/bell"
