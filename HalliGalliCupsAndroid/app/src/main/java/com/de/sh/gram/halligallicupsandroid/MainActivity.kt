@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.content.ClipDescription
 import android.util.Log
 import android.view.DragEvent
+import android.view.Gravity
 import android.view.View.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
@@ -19,12 +20,15 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     var score: Int = 0
     var stage: Int = 0
+    lateinit var nextStageDialog: NextStageDialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var randomNum = Random().nextInt(18)
+        var randomNum = Random().nextInt(17)
+        nextStageDialog = NextStageDialog(this, nextStageCancelClickListener, nextStageClickListener)
 
         var cards: ArrayList<Card> = ArrayList<Card>()
         val card1: Card = Card(arrayOf("red", "blue", "green", "black"))
@@ -86,11 +90,11 @@ class MainActivity : AppCompatActivity() {
         img_main_fourth_cup.setOnDragListener(DragListener())
         img_main_fourth_cup.setOnClickListener { imageComebackCheck(img_main_fourth_cup) }
 
-        setScore()
-        setStage()
+        text_main_score.text = "SCORE : " + score.toString()
+        text_main_stage.text = "STAGE : " + stage.toString()
 
         btn_main_bell.setOnClickListener {
-            var yourArray: Array<String> = arrayOf("","","","")
+            var yourArray: Array<String> = arrayOf("", "", "", "")
             when (img_main_first_cup.tag) {
                 R.drawable.red_cup -> yourArray[0] = "red"
                 R.drawable.green_cup -> yourArray[0] = "green"
@@ -116,11 +120,14 @@ class MainActivity : AppCompatActivity() {
                 R.drawable.black_cup -> yourArray[3] = "black"
             }
 
-            Log.d("Debug",cards[randomNum].cardArray[0]+cards[randomNum].cardArray[1]+cards[randomNum].cardArray[2]+cards[randomNum].cardArray[3])
-            if(cards[randomNum].match(yourArray)) {
-                Toast.makeText(this,"성공",LENGTH_SHORT).show()
+            Log.d("Debug", cards[randomNum].cardArray[0] + cards[randomNum].cardArray[1] + cards[randomNum].cardArray[2] + cards[randomNum].cardArray[3])
+            if (cards[randomNum].match(yourArray)) {
+                Toast.makeText(this, "성공", LENGTH_SHORT).show()
+                nextStageDialog.setCancelable(true)
+                nextStageDialog.window.setGravity(Gravity.CENTER)
+                nextStageDialog.show()
             } else {
-                Toast.makeText(this,"실패", LENGTH_SHORT).show()
+                Toast.makeText(this, "실패", LENGTH_SHORT).show()
             }
         }
 
@@ -207,23 +214,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setScore() {
-        text_main_score.text = score.toString()
-    }
-
-    fun setStage() {
-        text_main_stage.text = stage.toString()
-    }
-
     class Card(var cardArray: Array<String>) {
 
         fun match(yourArray: Array<String>): Boolean {
-            for (i in 0..4) {
-                if (!(cardArray[0].equals(yourArray[0]))) {
+            Log.d("Debug", "cardArray : " + cardArray[0] + cardArray[1] + cardArray[2] + cardArray[3])
+            Log.d("Debug", "yourArray : " + yourArray[0] + yourArray[1] + yourArray[2] + yourArray[3])
+            for (i in 0..3) {
+                if (!(cardArray[i].equals(yourArray[i]))) {
                     return false
                 }
             }
             return true
         }
+    }
+
+    val nextStageCancelClickListener: OnClickListener = OnClickListener { nextStageDialog.dismiss() }
+
+    val nextStageClickListener = OnClickListener {
+        nextStageDialog.dismiss()
+        stage++
+        text_main_stage.text = "STAGE : " + stage.toString()
     }
 }
