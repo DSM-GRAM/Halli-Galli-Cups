@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "755303009035",
+    "firebase_url": "https://halligallicups.firebaseio.com",
+    "project_id": "halligallicups",
+    "storage_bucket": "halligallicups.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755303009035:android:fa6c5b2c1d801db3",
+        "android_client_info": {
+          "package_name": "com.de.sh.gram.halligallicupsandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "755303009035-932v7n1ef7jevr9pha7td0hk9uvto2d1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.de.sh.gram.halligallicupsandroid",
+            "certificate_hash": "e1167856a9336ba8dab0bcf657bb75a8b812ed86"
+          }
+        },
+        {
+          "client_id": "755303009035-fp2cjknm6rqkql2apf48i4m2kjq4pmdg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9xtdMpAjhGZJWI5noo7dkKVB24T3SRzA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "755303009035-fp2cjknm6rqkql2apf48i4m2kjq4pmdg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
