@@ -8,27 +8,34 @@ import android.view.MotionEvent.ACTION_DOWN
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.ClipDescription
+import android.content.Intent
 import android.util.Log
 import android.view.DragEvent
 import android.view.Gravity
 import android.view.View.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import io.socket.emitter.Emitter
 import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
     var score: Int = 0
-    var stage: Int = 0
+    var stage: Int = 1
     lateinit var nextStageDialog: NextStageDialog
+    val firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+    val databaseReference: DatabaseReference = firebaseDatabase.reference
+    val socket = SocketApplication.getSocket()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        socket.connect()
         var randomNum = Random().nextInt(17)
-        nextStageDialog = NextStageDialog(this, nextStageCancelClickListener, nextStageClickListener)
 
         var cards: ArrayList<Card> = ArrayList<Card>()
         val card1: Card = Card(arrayOf("red", "blue", "green", "black"))
@@ -123,14 +130,15 @@ class MainActivity : AppCompatActivity() {
             Log.d("Debug", cards[randomNum].cardArray[0] + cards[randomNum].cardArray[1] + cards[randomNum].cardArray[2] + cards[randomNum].cardArray[3])
             if (cards[randomNum].match(yourArray)) {
                 Toast.makeText(this, "성공", LENGTH_SHORT).show()
-                nextStageDialog.setCancelable(true)
-                nextStageDialog.window.setGravity(Gravity.CENTER)
-                nextStageDialog.show()
+                socket.emit("complete")
+
             } else {
-                Toast.makeText(this, "실패", LENGTH_SHORT).show()
+                Toast.makeText(this, "틀렸습니다!!!!", LENGTH_SHORT).show()
             }
         }
 
+        socket.on("win", win)
+        socket.on("lose", lose)
 
     }
 
@@ -234,5 +242,20 @@ class MainActivity : AppCompatActivity() {
         nextStageDialog.dismiss()
         stage++
         text_main_stage.text = "STAGE : " + stage.toString()
+    }
+
+    var win: Emitter.Listener = Emitter.Listener {
+        nextStageDialog = NextStageDialog(this, true, nextStageCancelClickListener, nextStageClickListener)
+        nextStageDialog.setCancelable(true)
+        nextStageDialog.window.setGravity(Gravity.CENTER)
+        nextStageDialog.show()
+
+    }
+
+    var lose: Emitter.Listener = Emitter.Listener {
+        nextStageDialog = NextStageDialog(this, false, nextStageCancelClickListener, nextStageClickListener)
+        nextStageDialog.setCancelable(true)
+        nextStageDialog.window.setGravity(Gravity.CENTER)
+        nextStageDialog.show()
     }
 }
