@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     val databaseReference: DatabaseReference = firebaseDatabase.reference
     val socket: Socket = SocketApplication.socket
     var randomNum = Random().nextInt(17)
+    var nowScore: Int = 5000;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,6 +148,17 @@ class MainActivity : AppCompatActivity() {
         socket.on("lose", lose)
         socket.on("startNextStage", startNextStage)
 
+        var mTask: TimerTask = object : TimerTask() {
+            override fun run() {
+                nowScore -=150;
+            }
+        }
+
+        var mTimer = Timer()
+
+        mTimer.schedule(mTask, 0,1000)
+
+
     }
 
     class TouchListener : View.OnTouchListener {
@@ -253,10 +265,11 @@ class MainActivity : AppCompatActivity() {
         val mHandler = Handler(Looper.getMainLooper())
         mHandler.postDelayed({
             Log.d("Debug", "이김")
-            nextStageDialog = NextStageDialog(this, true, nextStageCancelClickListener, nextStageClickListener)
+            nextStageDialog = NextStageDialog(this, true, stage, nowScore, nextStageCancelClickListener, nextStageClickListener)
             nextStageDialog.setCancelable(true)
             nextStageDialog.window.setGravity(Gravity.CENTER)
             nextStageDialog.show()
+            score +=nowScore;
         }, 0)
     }
 
@@ -264,7 +277,7 @@ class MainActivity : AppCompatActivity() {
         val mHandler = Handler(Looper.getMainLooper())
         mHandler.postDelayed({
             Log.d("Debug", "짐ㅠㅠ")
-            nextStageDialog = NextStageDialog(this, false, nextStageCancelClickListener, nextStageClickListener)
+            nextStageDialog = NextStageDialog(this, false, stage, 0, nextStageCancelClickListener, nextStageClickListener)
             nextStageDialog.setCancelable(true)
             nextStageDialog.window.setGravity(Gravity.CENTER)
             nextStageDialog.show()
@@ -296,13 +309,17 @@ class MainActivity : AppCompatActivity() {
         img_main_second_cup.setBackgroundResource(R.drawable.empty_image_background)
         img_main_third_cup.setBackgroundResource(R.drawable.empty_image_background)
         img_main_fourth_cup.setBackgroundResource(R.drawable.empty_image_background)
-        text_main_stage.text = "STAGE : " + stage.toString()
 
         img_main_first_cup.tag = null
         img_main_second_cup.tag = null
         img_main_third_cup.tag = null
         img_main_fourth_cup.tag = null
 
+        text_main_stage.text = "STAGE : $stage"
+        text_main_score.text = "SCORE : $score"
+        nowScore = 5000;
+
         //todo card image 바꿔주기, 타이머 초기화
     }
+
 }

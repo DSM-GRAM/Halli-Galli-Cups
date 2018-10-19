@@ -9,7 +9,7 @@ import android.view.View.VISIBLE
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.dialog_main_next_stage.*
 
-class NextStageDialog(context: Context, var win: Boolean, var cancelClickListener: View.OnClickListener, var nextStageClickListener: View.OnClickListener) : Dialog(context) {
+class NextStageDialog(context: Context, var win: Boolean, var stage: Int, var score: Int,var cancelClickListener: View.OnClickListener, var nextStageClickListener: View.OnClickListener) : Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val lpWindow = WindowManager.LayoutParams()
@@ -25,6 +25,9 @@ class NextStageDialog(context: Context, var win: Boolean, var cancelClickListene
             text_dialog_next_stage_lose.visibility = VISIBLE
             text_dialog_next_stage_win.visibility = INVISIBLE
         }
+
+        text_dialog_next_stage_stage.text = "STAGE : $stage"
+        text_dialog_next_stage_score.text = "SCORE : $score"
 
         if(cancelClickListener != null)
             btn_dialog_next_stage_cancel.setOnClickListener(cancelClickListener)
