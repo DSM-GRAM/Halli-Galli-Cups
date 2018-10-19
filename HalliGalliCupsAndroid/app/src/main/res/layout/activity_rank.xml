@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RankActivity">
+    <TextView
+        android:id="@+id/text_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RANK"
+        android:textSize="40sp"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <EditText
+        android:id="@+id/edit_rank_name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:hint="name"
+        app:layout_constraintTop_toBottomOf="@id/text_rank"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/text_rank_main_score"/>
+    <TextView
+        android:id="@+id/text_rank_main_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="score"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintTop_toTopOf="@id/edit_rank_name"
+        app:layout_constraintStart_toEndOf="@id/edit_rank_name"
+        app:layout_constraintEnd_toStartOf="@id/btn_rank"
+        app:layout_constraintBottom_toBottomOf="@id/edit_rank_name"/>
+    <Button
+        android:id="@+id/btn_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="랭킹 등록"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@id/text_rank" />
+    <View
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.9"
+        android:layout_height="1dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_rank_name"
+        app:layout_constraintBottom_toTopOf="@id/recycler_rank"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_rank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/edit_rank_name"
+        android:layout_marginTop="30dp"/>
+
+</android.support.constraint.ConstraintLayout>

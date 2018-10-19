@@ -16,8 +16,6 @@ import android.view.Gravity
 import android.view.View.*
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import java.util.*
@@ -30,8 +28,6 @@ class MainActivity : AppCompatActivity() {
     var score: Int = 0
     var stage: Int = 1
     lateinit var nextStageDialog: NextStageDialog
-    val firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
-    val databaseReference: DatabaseReference = firebaseDatabase.reference
     val socket: Socket = SocketApplication.socket
     var randomNum = Random().nextInt(17)
     var nowScore: Int = 5000;
@@ -261,11 +257,17 @@ class MainActivity : AppCompatActivity() {
         socket.emit("readyNextStage");
     }
 
+    val goRankClickListener = OnClickListener {
+        val intent= Intent(applicationContext, RankActivity::class.java)
+        intent.putExtra("score",score)
+        startActivity(intent)
+    }
+
     val win: Emitter.Listener = Emitter.Listener {
         val mHandler = Handler(Looper.getMainLooper())
         mHandler.postDelayed({
             Log.d("Debug", "이김")
-            nextStageDialog = NextStageDialog(this, true, stage, nowScore, nextStageCancelClickListener, nextStageClickListener)
+            nextStageDialog = NextStageDialog(this, true, stage, nowScore, nextStageCancelClickListener, nextStageClickListener, goRankClickListener)
             nextStageDialog.setCancelable(true)
             nextStageDialog.window.setGravity(Gravity.CENTER)
             nextStageDialog.show()
@@ -277,7 +279,7 @@ class MainActivity : AppCompatActivity() {
         val mHandler = Handler(Looper.getMainLooper())
         mHandler.postDelayed({
             Log.d("Debug", "짐ㅠㅠ")
-            nextStageDialog = NextStageDialog(this, false, stage, 0, nextStageCancelClickListener, nextStageClickListener)
+            nextStageDialog = NextStageDialog(this, false, stage, 0, nextStageCancelClickListener, nextStageClickListener, goRankClickListener)
             nextStageDialog.setCancelable(true)
             nextStageDialog.window.setGravity(Gravity.CENTER)
             nextStageDialog.show()
@@ -322,4 +324,8 @@ class MainActivity : AppCompatActivity() {
         //todo card image 바꿔주기, 타이머 초기화
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        socket.emit("disconnect")
+    }
 }

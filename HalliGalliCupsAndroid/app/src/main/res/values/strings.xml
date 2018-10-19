@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HalliGalliCupsAndroid</string>
+    <string name="title_activity_rank">RankActivity</string>
 </resources>

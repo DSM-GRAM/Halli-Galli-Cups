@@ -9,7 +9,7 @@ import android.view.View.VISIBLE
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.dialog_main_next_stage.*
 
-class NextStageDialog(context: Context, var win: Boolean, var stage: Int, var score: Int,var cancelClickListener: View.OnClickListener, var nextStageClickListener: View.OnClickListener) : Dialog(context) {
+class NextStageDialog(context: Context, var win: Boolean, var stage: Int, var score: Int,var cancelClickListener: View.OnClickListener, var nextStageClickListener: View.OnClickListener, var goRankClickListener: View.OnClickListener) : Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val lpWindow = WindowManager.LayoutParams()
@@ -28,6 +28,11 @@ class NextStageDialog(context: Context, var win: Boolean, var stage: Int, var sc
 
         text_dialog_next_stage_stage.text = "STAGE : $stage"
         text_dialog_next_stage_score.text = "SCORE : $score"
+
+        if(stage == 5) {
+            btn_dialog_next_stage_next.text = "GO RANK"
+            btn_dialog_next_stage_next.setOnClickListener(goRankClickListener)
+        }
 
         if(cancelClickListener != null)
             btn_dialog_next_stage_cancel.setOnClickListener(cancelClickListener)
