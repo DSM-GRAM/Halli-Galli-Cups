@@ -17,16 +17,16 @@
         <activity
             android:name=".StartActivity"
             android:screenOrientation="landscape">
-
-        </activity>
-        <activity
-            android:name=".RankActivity"
-            android:label="@string/title_activity_rank">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".RankActivity"
+            android:label="@string/title_activity_rank">
+
         </activity>
     </application>
 

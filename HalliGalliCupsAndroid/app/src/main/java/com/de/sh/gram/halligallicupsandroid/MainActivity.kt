@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         var intent: Intent = getIntent()
-        randomNum = intent.getIntExtra("randNum",1)
+        randomNum = intent.getIntExtra("randNum", 1)
 
 
         var cards: ArrayList<Card> = ArrayList<Card>()
@@ -131,10 +131,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             Log.d("Debug", cards[randomNum].cardArray[0] + cards[randomNum].cardArray[1] + cards[randomNum].cardArray[2] + cards[randomNum].cardArray[3])
+
+
             if (cards[randomNum].match(yourArray)) {
                 Toast.makeText(this, "성공", LENGTH_SHORT).show()
                 socket.emit("complete")
-
             } else {
                 Toast.makeText(this, "틀렸습니다!!!!", LENGTH_SHORT).show()
             }
@@ -146,13 +147,13 @@ class MainActivity : AppCompatActivity() {
 
         var mTask: TimerTask = object : TimerTask() {
             override fun run() {
-                nowScore -=150;
+                nowScore -= 150;
             }
         }
 
         var mTimer = Timer()
 
-        mTimer.schedule(mTask, 0,1000)
+        mTimer.schedule(mTask, 0, 1000)
 
 
     }
@@ -258,8 +259,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     val goRankClickListener = OnClickListener {
-        val intent= Intent(applicationContext, RankActivity::class.java)
-        intent.putExtra("score",score)
+        val intent = Intent(applicationContext, RankActivity::class.java)
+        intent.putExtra("score", score)
         startActivity(intent)
     }
 
@@ -271,7 +272,7 @@ class MainActivity : AppCompatActivity() {
             nextStageDialog.setCancelable(true)
             nextStageDialog.window.setGravity(Gravity.CENTER)
             nextStageDialog.show()
-            score +=nowScore;
+            score += nowScore;
         }, 0)
     }
 
@@ -286,7 +287,7 @@ class MainActivity : AppCompatActivity() {
         }, 0)
     }
 
-    val startNextStage: Emitter.Listener = Emitter.Listener { args->
+    val startNextStage: Emitter.Listener = Emitter.Listener { args ->
         val data = args[0] as JSONObject
         val mHandler = Handler(Looper.getMainLooper())
         mHandler.postDelayed({
@@ -324,8 +325,11 @@ class MainActivity : AppCompatActivity() {
         //todo card image 바꿔주기, 타이머 초기화
     }
 
+    
+
     override fun onDestroy() {
         super.onDestroy()
         socket.emit("disconnect")
     }
+
 }

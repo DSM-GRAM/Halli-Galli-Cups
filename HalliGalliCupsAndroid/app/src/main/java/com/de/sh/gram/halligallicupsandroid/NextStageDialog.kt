@@ -29,14 +29,13 @@ class NextStageDialog(context: Context, var win: Boolean, var stage: Int, var sc
         text_dialog_next_stage_stage.text = "STAGE : $stage"
         text_dialog_next_stage_score.text = "SCORE : $score"
 
-        if(stage == 5) {
-            btn_dialog_next_stage_next.text = "GO RANK"
-            btn_dialog_next_stage_next.setOnClickListener(goRankClickListener)
-        }
-
         if(cancelClickListener != null)
             btn_dialog_next_stage_cancel.setOnClickListener(cancelClickListener)
         if(nextStageClickListener != null)
             btn_dialog_next_stage_next.setOnClickListener(nextStageClickListener)
+        if(stage == 5) {
+            btn_dialog_next_stage_next.text = "GO RANK"
+            btn_dialog_next_stage_next.setOnClickListener(goRankClickListener)
+        }
     }
 }
