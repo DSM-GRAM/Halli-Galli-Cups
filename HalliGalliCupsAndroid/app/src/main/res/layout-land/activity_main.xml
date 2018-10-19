@@ -13,7 +13,7 @@
         android:id="@+id/img_main_card"
         android:layout_width="200dp"
         android:layout_height="100dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/card1"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <ImageButton

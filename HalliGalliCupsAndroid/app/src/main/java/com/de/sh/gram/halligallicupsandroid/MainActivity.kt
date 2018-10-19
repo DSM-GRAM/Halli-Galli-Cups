@@ -9,6 +9,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.ClipDescription
 import android.content.Intent
+import android.os.Handler
 import android.util.Log
 import android.view.DragEvent
 import android.view.Gravity
@@ -17,8 +18,12 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import java.util.*
+import android.os.Looper
+import org.json.JSONException
+import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,15 +32,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var nextStageDialog: NextStageDialog
     val firebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     val databaseReference: DatabaseReference = firebaseDatabase.reference
-    val socket = SocketApplication.getSocket()
+    val socket: Socket = SocketApplication.socket
+    var randomNum = Random().nextInt(17)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        socket.connect()
-        var randomNum = Random().nextInt(17)
+        var intent: Intent = getIntent()
+        randomNum = intent.getIntExtra("randNum",1)
+
 
         var cards: ArrayList<Card> = ArrayList<Card>()
         val card1: Card = Card(arrayOf("red", "blue", "green", "black"))
@@ -75,7 +82,6 @@ class MainActivity : AppCompatActivity() {
         cards.add(card17)
 
         cards.add(Card(arrayOf("")))
-
 
         img_main_red_cup.tag = "IMAGEVIEW_TAG"
         img_main_green_cup.tag = "IMAGEVIEW_TAG"
@@ -139,6 +145,7 @@ class MainActivity : AppCompatActivity() {
 
         socket.on("win", win)
         socket.on("lose", lose)
+        socket.on("startNextStage", startNextStage)
 
     }
 
@@ -239,23 +246,63 @@ class MainActivity : AppCompatActivity() {
     val nextStageCancelClickListener: OnClickListener = OnClickListener { nextStageDialog.dismiss() }
 
     val nextStageClickListener = OnClickListener {
-        nextStageDialog.dismiss()
-        stage++
+        socket.emit("readyNextStage");
+    }
+
+    val win: Emitter.Listener = Emitter.Listener {
+        val mHandler = Handler(Looper.getMainLooper())
+        mHandler.postDelayed({
+            Log.d("Debug", "이김")
+            nextStageDialog = NextStageDialog(this, true, nextStageCancelClickListener, nextStageClickListener)
+            nextStageDialog.setCancelable(true)
+            nextStageDialog.window.setGravity(Gravity.CENTER)
+            nextStageDialog.show()
+        }, 0)
+    }
+
+    val lose: Emitter.Listener = Emitter.Listener {
+        val mHandler = Handler(Looper.getMainLooper())
+        mHandler.postDelayed({
+            Log.d("Debug", "짐ㅠㅠ")
+            nextStageDialog = NextStageDialog(this, false, nextStageCancelClickListener, nextStageClickListener)
+            nextStageDialog.setCancelable(true)
+            nextStageDialog.window.setGravity(Gravity.CENTER)
+            nextStageDialog.show()
+        }, 0)
+    }
+
+    val startNextStage: Emitter.Listener = Emitter.Listener { args->
+        val data = args[0] as JSONObject
+        val mHandler = Handler(Looper.getMainLooper())
+        mHandler.postDelayed({
+            nextStageDialog.dismiss()
+            stage++
+            init()
+            try {
+                randomNum = data.getInt("randNum")
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }, 0)
+
+    }
+
+    fun init() {
+        img_main_red_cup.visibility = VISIBLE
+        img_main_green_cup.visibility = VISIBLE
+        img_main_blue_cup.visibility = VISIBLE
+        img_main_black_cup.visibility = VISIBLE
+        img_main_first_cup.setBackgroundResource(R.drawable.empty_image_background)
+        img_main_second_cup.setBackgroundResource(R.drawable.empty_image_background)
+        img_main_third_cup.setBackgroundResource(R.drawable.empty_image_background)
+        img_main_fourth_cup.setBackgroundResource(R.drawable.empty_image_background)
         text_main_stage.text = "STAGE : " + stage.toString()
-    }
 
-    var win: Emitter.Listener = Emitter.Listener {
-        nextStageDialog = NextStageDialog(this, true, nextStageCancelClickListener, nextStageClickListener)
-        nextStageDialog.setCancelable(true)
-        nextStageDialog.window.setGravity(Gravity.CENTER)
-        nextStageDialog.show()
+        img_main_first_cup.tag = null
+        img_main_second_cup.tag = null
+        img_main_third_cup.tag = null
+        img_main_fourth_cup.tag = null
 
-    }
-
-    var lose: Emitter.Listener = Emitter.Listener {
-        nextStageDialog = NextStageDialog(this, false, nextStageCancelClickListener, nextStageClickListener)
-        nextStageDialog.setCancelable(true)
-        nextStageDialog.window.setGravity(Gravity.CENTER)
-        nextStageDialog.show()
+        //todo card image 바꿔주기, 타이머 초기화
     }
 }
