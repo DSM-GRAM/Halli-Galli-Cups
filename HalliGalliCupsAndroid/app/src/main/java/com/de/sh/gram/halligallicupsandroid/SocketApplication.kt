@@ -5,8 +5,7 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import java.net.URISyntaxException
 
-object SocketApplication {
-    val mSocket: Socket = IO.socket("http://10.156.145.143:8080")
+object SocketApplication: Application() {
 
-    fun getSocket() : Socket = mSocket
+        val socket: Socket = IO.socket("http://35.187.202.148:3000")
 }
