@@ -38,10 +38,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         var intent: Intent = getIntent()
-        randomNum = intent.getIntExtra("randNum", 1)
-
+        randomNum = intent.getIntExtra("randNum", 0)
+        Log.d("Debug","randomNum : "+randomNum);
+        setCardImage(randomNum)
 
         var cards: ArrayList<Card> = ArrayList<Card>()
+        val card0: Card = Card(arrayOf("green","black","red","green"));
         val card1: Card = Card(arrayOf("red", "blue", "green", "black"))
         val card2: Card = Card(arrayOf("red", "green", "black", "blue"))
         val card3: Card = Card(arrayOf("red", "black", "blue", "green"))
@@ -60,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         val card16: Card = Card(arrayOf("green", "red", "blue", "black"))
         val card17: Card = Card(arrayOf("green", "red", "black", "blue"))
 
+        cards.add(card0)
         cards.add(card1)
         cards.add(card2)
         cards.add(card3)
@@ -322,10 +325,32 @@ class MainActivity : AppCompatActivity() {
         text_main_score.text = "SCORE : $score"
         nowScore = 5000;
 
-        //todo card image 바꿔주기, 타이머 초기화
+        Log.d("Debug","randomNum : "+randomNum)
+        setCardImage(randomNum)
     }
 
-    
+    fun setCardImage(num: Int) {
+        when (num) {
+//            0 -> img_main_card.setBackgroundResource(R.drawable.card0)
+            1 -> img_main_card.setBackgroundResource(R.drawable.card1)
+            2 -> img_main_card.setBackgroundResource(R.drawable.card2)
+            3 -> img_main_card.setBackgroundResource(R.drawable.card3)
+//            4-> img_main_card.setBackgroundResource(R.drawable.card4)
+            5 -> img_main_card.setBackgroundResource(R.drawable.card5)
+//            6-> img_main_card.setBackgroundResource(R.drawable.card6)
+//            7-> img_main_card.setBackgroundResource(R.drawable.card7)
+            8 -> img_main_card.setBackgroundResource(R.drawable.card8)
+            9 -> img_main_card.setBackgroundResource(R.drawable.card9)
+//            10-> img_main_card.setBackgroundResource(R.drawable.card10)
+//            11-> img_main_card.setBackgroundResource(R.drawable.card11)
+            12 -> img_main_card.setBackgroundResource(R.drawable.card12)
+//            13-> img_main_card.setBackgroundResource(R.drawable.card13)
+//            14-> img_main_card.setBackgroundResource(R.drawable.card14)
+//            15-> img_main_card.setBackgroundResource(R.drawable.card15)
+//            16-> img_main_card.setBackgroundResource(R.drawable.card16)
+            17 -> img_main_card.setBackgroundResource(R.drawable.card17)
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
