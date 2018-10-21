@@ -39,11 +39,11 @@ class MainActivity : AppCompatActivity() {
 
         var intent: Intent = getIntent()
         randomNum = intent.getIntExtra("randNum", 0)
-        Log.d("Debug","randomNum : "+randomNum);
+        Log.d("Debug", "randomNum : " + randomNum);
         setCardImage(randomNum)
 
         var cards: ArrayList<Card> = ArrayList<Card>()
-        val card0: Card = Card(arrayOf("green","black","red","green"));
+        val card0: Card = Card(arrayOf("green", "black", "red", "blue"));
         val card1: Card = Card(arrayOf("red", "blue", "green", "black"))
         val card2: Card = Card(arrayOf("red", "green", "black", "blue"))
         val card3: Card = Card(arrayOf("red", "black", "blue", "green"))
@@ -187,32 +187,36 @@ class MainActivity : AppCompatActivity() {
             when (event.action) {
 
                 DragEvent.ACTION_DROP -> {
-                    Log.d("DragClickListener", "ACTION_DROP")
-
-                    if (v.id == R.id.img_main_first_cup || v.id == R.id.img_main_second_cup || v.id == R.id.img_main_third_cup || v.id == R.id.img_main_fourth_cup) {
-                        val view: View = event.localState as View
-                        view.visibility = View.INVISIBLE
-                        when (view.id) {
-                            R.id.img_main_red_cup -> {
-                                v.setBackgroundResource(R.drawable.red_cup)
-                                v.tag = R.drawable.red_cup
+                    if (v.tag == null) {
+                        Log.d("DragClickListener", "ACTION_DROP")
+                        if (v.id == R.id.img_main_first_cup || v.id == R.id.img_main_second_cup || v.id == R.id.img_main_third_cup || v.id == R.id.img_main_fourth_cup) {
+                            val view: View = event.localState as View
+                            view.visibility = View.INVISIBLE
+                            when (view.id) {
+                                R.id.img_main_red_cup -> {
+                                    v.setBackgroundResource(R.drawable.red_cup)
+                                    v.tag = R.drawable.red_cup
+                                }
+                                R.id.img_main_green_cup -> {
+                                    v.setBackgroundResource(R.drawable.green_cup)
+                                    v.tag = R.drawable.green_cup
+                                }
+                                R.id.img_main_blue_cup -> {
+                                    v.setBackgroundResource(R.drawable.blue_cup)
+                                    v.tag = R.drawable.blue_cup
+                                }
+                                R.id.img_main_black_cup -> {
+                                    v.setBackgroundResource(R.drawable.black_cup)
+                                    v.tag = R.drawable.black_cup
+                                }
                             }
-                            R.id.img_main_green_cup -> {
-                                v.setBackgroundResource(R.drawable.green_cup)
-                                v.tag = R.drawable.green_cup
-                            }
-                            R.id.img_main_blue_cup -> {
-                                v.setBackgroundResource(R.drawable.blue_cup)
-                                v.tag = R.drawable.blue_cup
-                            }
-                            R.id.img_main_black_cup -> {
-                                v.setBackgroundResource(R.drawable.black_cup)
-                                v.tag = R.drawable.black_cup
-                            }
+                        } else if (v.id == R.id.layout) {
+                            val view: View = event.localState as View
+                            view.visibility = VISIBLE
                         }
-                    } else if (v.id == R.id.layout) {
+                    } else {
                         val view: View = event.localState as View
-                        view.visibility = VISIBLE
+                        view.visibility = View.VISIBLE
                     }
                 }
             }
@@ -225,18 +229,22 @@ class MainActivity : AppCompatActivity() {
             R.drawable.red_cup -> {
                 img_main_red_cup.visibility = VISIBLE
                 v.setBackgroundResource(R.drawable.empty_image_background)
+                v.tag = null
             }
             R.drawable.green_cup -> {
                 img_main_green_cup.visibility = VISIBLE
                 v.setBackgroundResource(R.drawable.empty_image_background)
+                v.tag = null
             }
             R.drawable.blue_cup -> {
                 img_main_blue_cup.visibility = VISIBLE
                 v.setBackgroundResource(R.drawable.empty_image_background)
+                v.tag = null
             }
             R.drawable.black_cup -> {
                 img_main_black_cup.visibility = VISIBLE
                 v.setBackgroundResource(R.drawable.empty_image_background)
+                v.tag = null
             }
         }
     }
@@ -272,7 +280,7 @@ class MainActivity : AppCompatActivity() {
         mHandler.postDelayed({
             Log.d("Debug", "이김")
             nextStageDialog = NextStageDialog(this, true, stage, nowScore, nextStageCancelClickListener, nextStageClickListener, goRankClickListener)
-            nextStageDialog.setCancelable(true)
+            nextStageDialog.setCancelable(false)
             nextStageDialog.window.setGravity(Gravity.CENTER)
             nextStageDialog.show()
             score += nowScore;
@@ -284,7 +292,7 @@ class MainActivity : AppCompatActivity() {
         mHandler.postDelayed({
             Log.d("Debug", "짐ㅠㅠ")
             nextStageDialog = NextStageDialog(this, false, stage, 0, nextStageCancelClickListener, nextStageClickListener, goRankClickListener)
-            nextStageDialog.setCancelable(true)
+            nextStageDialog.setCancelable(false)
             nextStageDialog.window.setGravity(Gravity.CENTER)
             nextStageDialog.show()
         }, 0)
@@ -296,9 +304,9 @@ class MainActivity : AppCompatActivity() {
         mHandler.postDelayed({
             nextStageDialog.dismiss()
             stage++
-            init()
             try {
                 randomNum = data.getInt("randNum")
+                init()
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
@@ -325,29 +333,29 @@ class MainActivity : AppCompatActivity() {
         text_main_score.text = "SCORE : $score"
         nowScore = 5000;
 
-        Log.d("Debug","randomNum : "+randomNum)
+        Log.d("Debug", "randomNum : " + randomNum)
         setCardImage(randomNum)
     }
 
     fun setCardImage(num: Int) {
         when (num) {
-//            0 -> img_main_card.setBackgroundResource(R.drawable.card0)
+            0 -> img_main_card.setBackgroundResource(R.drawable.card0)
             1 -> img_main_card.setBackgroundResource(R.drawable.card1)
             2 -> img_main_card.setBackgroundResource(R.drawable.card2)
             3 -> img_main_card.setBackgroundResource(R.drawable.card3)
-//            4-> img_main_card.setBackgroundResource(R.drawable.card4)
+            4 -> img_main_card.setBackgroundResource(R.drawable.card4)
             5 -> img_main_card.setBackgroundResource(R.drawable.card5)
-//            6-> img_main_card.setBackgroundResource(R.drawable.card6)
-//            7-> img_main_card.setBackgroundResource(R.drawable.card7)
+            6 -> img_main_card.setBackgroundResource(R.drawable.card6)
+            7 -> img_main_card.setBackgroundResource(R.drawable.card7)
             8 -> img_main_card.setBackgroundResource(R.drawable.card8)
             9 -> img_main_card.setBackgroundResource(R.drawable.card9)
-//            10-> img_main_card.setBackgroundResource(R.drawable.card10)
-//            11-> img_main_card.setBackgroundResource(R.drawable.card11)
+            10 -> img_main_card.setBackgroundResource(R.drawable.card10)
+            11 -> img_main_card.setBackgroundResource(R.drawable.card11)
             12 -> img_main_card.setBackgroundResource(R.drawable.card12)
-//            13-> img_main_card.setBackgroundResource(R.drawable.card13)
-//            14-> img_main_card.setBackgroundResource(R.drawable.card14)
-//            15-> img_main_card.setBackgroundResource(R.drawable.card15)
-//            16-> img_main_card.setBackgroundResource(R.drawable.card16)
+            13 -> img_main_card.setBackgroundResource(R.drawable.card13)
+            14 -> img_main_card.setBackgroundResource(R.drawable.card14)
+            15 -> img_main_card.setBackgroundResource(R.drawable.card15)
+            16 -> img_main_card.setBackgroundResource(R.drawable.card16)
             17 -> img_main_card.setBackgroundResource(R.drawable.card17)
         }
     }
